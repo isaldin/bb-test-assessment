@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { ServiceLocator } from '@/services/service-locator.ts'
+import type { Column } from '@/entities/column.ts'
 
 export const useColumn = () => {
   const isLoading = ref(false)
@@ -27,10 +28,15 @@ export const useColumn = () => {
     return columnService.getColumnById(boardId, columnId)
   }
 
+  const updateColumn = (column: Column) => {
+    columnService.saveColumn(column)
+  }
+
   return {
     isLoading,
     initializeColumns,
     getColumnsForBoard,
     getColumnById,
+    updateColumn,
   }
 }

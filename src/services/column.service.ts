@@ -59,4 +59,18 @@ export class ColumnService {
       return colRefs?.find((col) => col.value.id === columnId)?.value
     })
   }
+
+  public saveColumn(column: Column) {
+    const boardId = column.boardId
+    const colRefs = this.columns.value.get(boardId) || []
+    const existingIndex = colRefs.findIndex((col) => col.value.id === column.id)
+
+    if (existingIndex !== -1) {
+      colRefs[existingIndex].value = column
+    } else {
+      colRefs.push(ref(column))
+    }
+
+    this.columns.value.set(boardId, colRefs)
+  }
 }
