@@ -46,6 +46,13 @@ export class ColumnService {
     this.columns.value.set(boardId, wrapped)
   }
 
+  public getColumnsForBoard(boardId: string) {
+    return computed(() => {
+      const colRefs = this.columns.value.get(boardId) || []
+      return colRefs.map((colRef) => colRef.value)
+    })
+  }
+
   public getColumnById(boardId: string, columnId: string) {
     return computed(() => {
       const colRefs = this.columns.value.get(boardId)

@@ -1,6 +1,13 @@
 <template>
   <div class="board-view">
-    <div class="board-view__columns">columns here</div>
+    <div class="board-view__columns">
+      <column-view
+        v-for="column in columns"
+        :key="column.id"
+        :board-id="column.boardId"
+        :column-id="column.id"
+      />
+    </div>
     <div class="board-view__actions">
       <board-actions-view />
     </div>
@@ -9,6 +16,16 @@
 
 <script lang="ts" setup>
 import BoardActionsView from '@/views/board/BoardActionsView.vue'
+import { useColumn } from '@/compositions/column'
+import ColumnView from '@/views/column/ColumnView.vue'
+
+const { boardId } = defineProps<{ boardId: string }>()
+
+const { getColumnsForBoard, initializeColumns } = useColumn()
+
+initializeColumns(boardId)
+
+const columns = getColumnsForBoard(boardId)
 </script>
 
 <style lang="scss" scoped>
@@ -21,7 +38,10 @@ import BoardActionsView from '@/views/board/BoardActionsView.vue'
   padding: 24px;
 
   &__columns {
+    display: flex;
     flex: 1;
+    gap: 24px;
+    overflow-y: auto;
   }
 
   &__actions {
