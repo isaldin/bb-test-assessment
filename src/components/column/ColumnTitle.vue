@@ -9,6 +9,7 @@
         <div
           ref="divContentRef"
           contenteditable
+          class="column-title__edit"
           @keydown="handleCommit($event, slotProps.commit, slotProps.cancel)"
           @blur="slotProps.cancel"
         >
@@ -77,6 +78,14 @@ watch(divContentRef, (el) => {
   &__display {
     cursor: pointer;
     user-select: none;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__edit {
+    width: 100%;
   }
 }
 </style>
