@@ -1,37 +1,17 @@
 <template>
   <div v-if="column" class="column-view">
-    <div class="column-view__title">
-      <column-title
-        class="column-view__title__text"
-        :model-value="column.name"
-        @update:model-value="handleUpdateTitle"
-      />
-
-      <div class="column-view__title__actions">
-        <button-with-icon>
-          Disable editing
-          <template #icon>
-            <icon-pause />
-          </template>
-        </button-with-icon>
-
-        <button-with-icon>
-          Delete column
-          <template #icon>
-            <icon-minus />
-          </template>
-        </button-with-icon>
-      </div>
-    </div>
+    <column-title-view
+      :title="column.name"
+      @update:title="handleUpdateTitle"
+      @delete:column="handleDeleteColumn"
+      @disable:column="handleDisableColumn"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useColumn } from '@/compositions/column'
-import ColumnTitle from '@/components/column/ColumnTitle.vue'
-import ButtonWithIcon from '@/components/ButtonWithIcon.vue'
-import IconPause from '@/components/icons/IconPause.vue'
-import IconMinus from '@/components/icons/IconMinus.vue'
+import ColumnTitleView from '@/views/column/ColumnTitleView.vue'
 
 const { boardId, columnId } = defineProps<{ boardId: string; columnId: string }>()
 
@@ -47,6 +27,14 @@ const handleUpdateTitle = (title: string) => {
   column.value.name = title
   updateColumn(column.value)
 }
+
+const handleDeleteColumn = () => {
+  console.log('Delete column:', columnId)
+}
+
+const handleDisableColumn = () => {
+  console.log('Disable column:', columnId)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -57,27 +45,5 @@ const handleUpdateTitle = (title: string) => {
   min-height: 902px;
   flex-shrink: 0;
   padding: 16px 16px 20px;
-
-  &__title {
-    display: flex;
-    justify-content: space-between;
-
-    &__text {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      margin-right: 4px;
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &__actions {
-      display: flex;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-  }
 }
 </style>
