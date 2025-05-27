@@ -8,7 +8,7 @@ export class ColumnService {
   public fetchColumns(boardId: string): Promise<Column[]> {
     const result: Column[] = [
       {
-        id: '1',
+        id: crypto.randomUUID(),
         name: 'TODO',
         boardId,
         order: 0,
@@ -17,7 +17,7 @@ export class ColumnService {
         updatedAt: Date.now(),
       },
       {
-        id: '2',
+        id: crypto.randomUUID(),
         name: 'In progress',
         boardId,
         order: 1,
@@ -26,7 +26,7 @@ export class ColumnService {
         updatedAt: Date.now(),
       },
       {
-        id: '3',
+        id: crypto.randomUUID(),
         name: 'Done',
         boardId,
         order: 2,

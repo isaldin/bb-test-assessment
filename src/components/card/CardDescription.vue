@@ -28,7 +28,7 @@ import { ref, watch } from 'vue'
 import { setCursorToTheEnd } from '@/utils/setCursorToTheEnd.ts'
 
 defineProps<{
-  modelValue: string
+  modelValue: string | undefined
   editable?: boolean
 }>()
 

@@ -9,14 +9,22 @@
 
     <div class="column-view__cards">
       <card-view
-        title="Increase the price of the monthly subscription by 100% for users with an ios & macos Increase the price of the monthly subscription by 100% for users with an ios & macos"
-        description="After a month when users notice the problem, then return everything to the way it was before to get a pay raise After a month when users notice the problem, then return everything to the way it was before to get a pay raise"
-        :edit-mode="currentlyEditingCardId === 'card-1'"
-        @dblclick="(e) => handleCardDblClick('card-1')(e)"
+        v-for="card in cards"
+        :key="card.id"
+        :title="card.title"
+        :description="card.description"
+        :edit-mode="currentlyEditingCardId === card.id"
+        @dblclick="(e) => handleCardDblClick(card.id)(e)"
         @cancel:editing="startEditingCard(null)"
       />
 
-      <new-card-button />
+      <new-card-view
+        v-if="newCardShown"
+        @cancel="hideNewCardForColumn()"
+        @update:model="handleCreateNewCard"
+      />
+
+      <new-card-button v-if="!newCardShown" @click="showNewCardForColumn(columnId)" />
     </div>
   </div>
 </template>
@@ -27,6 +35,8 @@ import ColumnTitleView from '@/views/column/ColumnTitleView.vue'
 import CardView from '@/views/card/CardView.vue'
 import { useCard } from '@/compositions/card'
 import NewCardButton from '@/components/column/NewCardButton.vue'
+import NewCardView from '@/views/card/NewCardView.vue'
+import { computed } from 'vue'
 
 const emit = defineEmits<{
   (e: '@delete:column', columnId: string): void
@@ -35,9 +45,24 @@ const emit = defineEmits<{
 const { boardId, columnId } = defineProps<{ boardId: string; columnId: string }>()
 
 const { getColumnById, updateColumn } = useColumn()
-const { currentlyEditingCardId, startEditingCard } = useCard()
+const {
+  initializeCards,
+  getCardsForColumn,
+  currentlyEditingCardId,
+  startEditingCard,
+  showNewCardForColumn,
+  newCardShownForColumnId,
+  hideNewCardForColumn,
+  createNewCard,
+} = useCard()
 
 const column = getColumnById(boardId, columnId)
+
+const newCardShown = computed(() => newCardShownForColumnId.value === columnId)
+
+initializeCards(columnId)
+
+const cards = getCardsForColumn(columnId)
 
 const handleUpdateTitle = (title: string) => {
   if (!column.value) {
@@ -65,6 +90,10 @@ const handleCardDblClick =
 
     startEditingCard(cardId)
   }
+
+const handleCreateNewCard = (title: string) => {
+  createNewCard(columnId, title)
+}
 </script>
 
 <style lang="scss" scoped>

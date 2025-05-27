@@ -1,5 +1,5 @@
 <template>
-  <div class="card-view" :class="{ 'card-view__edit-mode': editMode }">
+  <card-view-layout :with-border="editMode">
     <card-title :editable="editMode" :model-value="title" @update:model-value="handleUpdateTitle" />
 
     <card-description
@@ -23,7 +23,7 @@
         </template>
       </button-with-icon>
     </div>
-  </div>
+  </card-view-layout>
 </template>
 
 <script lang="ts" setup>
@@ -32,10 +32,11 @@ import ButtonWithIcon from '@/components/ButtonWithIcon.vue'
 import IconFlash from '@/components/icons/IconFlash.vue'
 import IconMinus from '@/components/icons/IconMinus.vue'
 import CardDescription from '@/components/card/CardDescription.vue'
+import CardViewLayout from '@/views/card/CardViewLayout.vue'
 
 defineProps<{
   title: string
-  description: string
+  description?: string
   editMode?: boolean
 }>()
 
@@ -62,15 +63,6 @@ const handleCancelChanges = () => {
 
 <style lang="scss" scoped>
 .card-view {
-  padding: 16px;
-  background: #ffffff;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &__edit-mode {
-    outline: 2px solid #007aff;
-  }
-
   &__title {
     font-size: 14px;
     font-weight: 600;
