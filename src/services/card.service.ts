@@ -61,4 +61,8 @@ export class CardService {
       columnCards[index].value = card
     }
   }
+
+  public clearCards(columnId: string) {
+    this.cards.value.delete(columnId)
+  }
 }

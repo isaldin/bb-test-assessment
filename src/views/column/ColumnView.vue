@@ -29,7 +29,11 @@
     </div>
 
     <div class="column-view__actions">
-      <column-actions-view :sort-order="column.sortOrder" @sort:cards="handleSortCards" />
+      <column-actions-view
+        :sort-order="column.sortOrder"
+        @sort:cards="handleSortCards"
+        @clear:cards="handleClearCards"
+      />
     </div>
   </div>
 </template>
@@ -41,7 +45,7 @@ import CardView from '@/views/card/CardView.vue'
 import { useCard } from '@/compositions/card'
 import NewCardButton from '@/components/column/NewCardButton.vue'
 import NewCardView from '@/views/card/NewCardView.vue'
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 import type { Card } from '@/entities/card.ts'
 import ColumnActionsView from '@/views/column/ColumnActionsView.vue'
 import type { Column } from '@/entities/column.ts'
@@ -65,6 +69,7 @@ const {
   hideNewCardForColumn,
   createNewCard,
   updateCard,
+  clearCards,
 } = useCard()
 
 const column = computed(() => getColumnById(columnId))
@@ -123,10 +128,16 @@ const handleSortCards = (sortOrder: Column['sortOrder']) => {
   column.value.sortOrder = sortOrder
   updateColumn(column.value)
 }
+
+const handleClearCards = () => {
+  clearCards(columnId)
+}
 </script>
 
 <style lang="scss" scoped>
 .column-view {
+  display: flex;
+  flex-direction: column;
   background: #eceff2;
   border-radius: 12px;
   width: 448px;
@@ -139,6 +150,7 @@ const handleSortCards = (sortOrder: Column['sortOrder']) => {
     gap: 8px;
     display: flex;
     flex-direction: column;
+    flex: 1;
   }
 }
 </style>

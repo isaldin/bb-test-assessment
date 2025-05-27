@@ -57,6 +57,10 @@ export const useCard = () => {
     cardService.updateCard(card)
   }
 
+  const clearCards = (columnId: string) => {
+    cardService.clearCards(columnId)
+  }
+
   return {
     initializeCards,
     getCardsForColumn,
@@ -67,5 +71,6 @@ export const useCard = () => {
     hideNewCardForColumn,
     createNewCard,
     updateCard,
+    clearCards,
   }
 }
