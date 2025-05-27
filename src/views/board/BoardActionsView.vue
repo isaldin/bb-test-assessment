@@ -8,7 +8,7 @@
         </template>
       </button-with-icon>
 
-      <button-with-icon>
+      <button-with-icon @click="$emit('shuffle-columns')">
         Shuffle columns
         <template #icon>
           <icon-shuffle />
@@ -42,6 +42,7 @@ import IconPause from '@/components/icons/IconPause.vue'
 
 defineEmits<{
   (e: 'new-column'): void
+  (e: 'shuffle-columns'): void
 }>()
 </script>
 

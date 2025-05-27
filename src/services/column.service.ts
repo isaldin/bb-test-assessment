@@ -1,5 +1,6 @@
 import type { Column } from '@/entities/column.ts'
 import { computed, type Ref, ref } from 'vue'
+import { randomInteger } from '@/utils/randomInteger.ts'
 
 export class ColumnService {
   private columns = ref(new Map<string, Ref<Column>[]>()) // реактивный Map
@@ -100,5 +101,17 @@ export class ColumnService {
 
     const colRefs = this.columns.value.get(boardId) || []
     this.columns.value.set(boardId, [...colRefs, ref(column)])
+  }
+
+  public shuffleColumns(boardId: string) {
+    const colRefs = this.columns.value.get(boardId)
+    if (!colRefs) return
+
+    for (let i = colRefs.length - 1; i > 0; i--) {
+      const j = randomInteger(0, colRefs.length - 1)
+      ;[colRefs[i], colRefs[j]] = [colRefs[j], colRefs[i]]
+    }
+
+    this.columns.value.set(boardId, colRefs)
   }
 }

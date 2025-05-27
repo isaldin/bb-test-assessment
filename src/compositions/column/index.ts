@@ -36,6 +36,10 @@ export const useColumn = () => {
     columnService.addNewColumn(boardId)
   }
 
+  const shuffleColumns = (boardId: string) => {
+    columnService.shuffleColumns(boardId)
+  }
+
   return {
     isLoading,
     initializeColumns,
@@ -43,5 +47,6 @@ export const useColumn = () => {
     getColumnById,
     updateColumn,
     addNewColumn,
+    shuffleColumns,
   }
 }

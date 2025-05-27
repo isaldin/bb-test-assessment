@@ -9,7 +9,10 @@
       />
     </div>
     <div class="board-view__actions">
-      <board-actions-view @new-column="handleNewColumnClick" />
+      <board-actions-view
+        @new-column="handleNewColumnClick"
+        @shuffle-columns="handleShuffleColumnsClick"
+      />
     </div>
   </div>
 </template>
@@ -21,7 +24,7 @@ import ColumnView from '@/views/column/ColumnView.vue'
 
 const { boardId } = defineProps<{ boardId: string }>()
 
-const { getColumnsForBoard, initializeColumns, addNewColumn } = useColumn()
+const { getColumnsForBoard, initializeColumns, addNewColumn, shuffleColumns } = useColumn()
 
 initializeColumns(boardId)
 
@@ -29,6 +32,10 @@ const columns = getColumnsForBoard(boardId)
 
 const handleNewColumnClick = () => {
   addNewColumn(boardId)
+}
+
+const handleShuffleColumnsClick = () => {
+  shuffleColumns(boardId)
 }
 </script>
 
