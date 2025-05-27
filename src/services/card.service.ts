@@ -1,17 +1,39 @@
 import { computed, type ComputedRef, type Ref, ref } from 'vue'
 import type { Card } from '@/entities/card.ts'
+import type { Column } from '@/entities/column.ts'
 
 export class CardService {
   private cards = ref(new Map<string, Ref<Card>[]>())
 
-  public fetchCards(_columnId: string): Promise<Card[]> {
-    return Promise.resolve([])
+  public fetchCards(columnId: string): Promise<Card[]> {
+    return Promise.resolve([
+      {
+        id: crypto.randomUUID(),
+        columnId,
+        title: 'Sample Card',
+      },
+      {
+        id: crypto.randomUUID(),
+        columnId,
+        title: 'Some another Sample Card',
+      },
+      {
+        id: crypto.randomUUID(),
+        columnId,
+        title: 'Yet another Sample Card',
+      },
+    ] satisfies Card[])
   }
 
-  public getCardsForColumn(columnId: string): ComputedRef<Card[]> {
+  public getCardsForColumn(columnId: string, sortOrder: Column['sortOrder']): ComputedRef<Card[]> {
     return computed(() => {
       const cardRefs = this.cards.value.get(columnId) || []
-      return cardRefs.map((cardRef) => cardRef.value)
+      return cardRefs
+        .map((cardRef) => cardRef.value)
+        .sort((a, b) => {
+          const sortValue = a.title.localeCompare(b.title)
+          return sortOrder === 'asc' ? sortValue : -sortValue
+        })
     })
   }
 

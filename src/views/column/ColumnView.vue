@@ -27,6 +27,10 @@
 
       <new-card-button v-if="!newCardShown" @click="showNewCardForColumn(columnId)" />
     </div>
+
+    <div class="column-view__actions">
+      <column-actions-view :sort-order="column.sortOrder" @sort:cards="handleSortCards" />
+    </div>
   </div>
 </template>
 
@@ -37,8 +41,10 @@ import CardView from '@/views/card/CardView.vue'
 import { useCard } from '@/compositions/card'
 import NewCardButton from '@/components/column/NewCardButton.vue'
 import NewCardView from '@/views/card/NewCardView.vue'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import type { Card } from '@/entities/card.ts'
+import ColumnActionsView from '@/views/column/ColumnActionsView.vue'
+import type { Column } from '@/entities/column.ts'
 
 type UpdateCardPayload = Pick<Card, 'title' | 'description'>
 
@@ -46,7 +52,7 @@ const emit = defineEmits<{
   (e: '@delete:column', columnId: string): void
 }>()
 
-const { boardId, columnId } = defineProps<{ boardId: string; columnId: string }>()
+const { columnId } = defineProps<{ columnId: string }>()
 
 const { getColumnById, updateColumn } = useColumn()
 const {
@@ -61,13 +67,14 @@ const {
   updateCard,
 } = useCard()
 
-const column = getColumnById(boardId, columnId)
+const column = computed(() => getColumnById(columnId))
 
 const newCardShown = computed(() => newCardShownForColumnId.value === columnId)
 
 initializeCards(columnId)
 
-const cards = getCardsForColumn(columnId)
+const sortOrder = computed(() => column.value?.sortOrder || 'asc')
+const cards = computed(() => getCardsForColumn(columnId, sortOrder.value).value ?? [])
 
 const handleUpdateTitle = (title: string) => {
   if (!column.value) {
@@ -106,6 +113,15 @@ const handleUpdateCard = (cardId: string, input: UpdateCardPayload) => {
   const card: Card = { id: cardId, columnId, ...input }
   updateCard(card)
   currentlyEditingCardId.value = null
+}
+
+const handleSortCards = (sortOrder: Column['sortOrder']) => {
+  if (!column.value) {
+    return
+  }
+
+  column.value.sortOrder = sortOrder
+  updateColumn(column.value)
 }
 </script>
 
