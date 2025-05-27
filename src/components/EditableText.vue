@@ -1,10 +1,24 @@
 <template>
-  <slot :switch-to-edit="switchToEditMode" v-if="!isEditMode" />
-  <slot v-else name="editable" :commit="handleCommit" :cancel="handleCancel" />
+  <slot
+    v-if="editable && isEditMode"
+    name="editable"
+    :commit="handleCommit"
+    :cancel="handleCancel"
+  />
+  <slot :switch-to-edit="switchToEditMode" v-else />
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+
+withDefaults(
+  defineProps<{
+    editable?: boolean
+  }>(),
+  {
+    editable: true,
+  },
+)
 
 const emits = defineEmits<{
   (e: 'save', value: string): void
