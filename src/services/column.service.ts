@@ -114,4 +114,15 @@ export class ColumnService {
 
     this.columns.value.set(boardId, colRefs)
   }
+
+  public deleteColumn(boardId: string, columnId: string) {
+    const colRefs = this.columns.value.get(boardId)
+    if (!colRefs) return
+
+    const index = colRefs.findIndex((col) => col.value.id === columnId)
+    if (index !== -1) {
+      colRefs.splice(index, 1)
+      this.columns.value.set(boardId, colRefs)
+    }
+  }
 }

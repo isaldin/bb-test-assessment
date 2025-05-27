@@ -13,6 +13,10 @@
 import { useColumn } from '@/compositions/column'
 import ColumnTitleView from '@/views/column/ColumnTitleView.vue'
 
+const emit = defineEmits<{
+  (e: '@delete:column', columnId: string): void
+}>()
+
 const { boardId, columnId } = defineProps<{ boardId: string; columnId: string }>()
 
 const { getColumnById, updateColumn } = useColumn()
@@ -29,7 +33,7 @@ const handleUpdateTitle = (title: string) => {
 }
 
 const handleDeleteColumn = () => {
-  console.log('Delete column:', columnId)
+  emit('@delete:column', columnId)
 }
 
 const handleDisableColumn = () => {

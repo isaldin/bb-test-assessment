@@ -40,6 +40,10 @@ export const useColumn = () => {
     columnService.shuffleColumns(boardId)
   }
 
+  const deleteColumn = (boardId: string, columnId: string) => {
+    columnService.deleteColumn(boardId, columnId)
+  }
+
   return {
     isLoading,
     initializeColumns,
@@ -48,5 +52,6 @@ export const useColumn = () => {
     updateColumn,
     addNewColumn,
     shuffleColumns,
+    deleteColumn,
   }
 }

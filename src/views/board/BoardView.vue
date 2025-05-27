@@ -6,6 +6,7 @@
         :key="column.id"
         :board-id="column.boardId"
         :column-id="column.id"
+        @@delete:column="handleDeleteColumn"
       />
     </div>
     <div class="board-view__actions">
@@ -24,7 +25,8 @@ import ColumnView from '@/views/column/ColumnView.vue'
 
 const { boardId } = defineProps<{ boardId: string }>()
 
-const { getColumnsForBoard, initializeColumns, addNewColumn, shuffleColumns } = useColumn()
+const { getColumnsForBoard, initializeColumns, addNewColumn, shuffleColumns, deleteColumn } =
+  useColumn()
 
 initializeColumns(boardId)
 
@@ -36,6 +38,10 @@ const handleNewColumnClick = () => {
 
 const handleShuffleColumnsClick = () => {
   shuffleColumns(boardId)
+}
+
+const handleDeleteColumn = (columnId: string) => {
+  deleteColumn(boardId, columnId)
 }
 </script>
 
