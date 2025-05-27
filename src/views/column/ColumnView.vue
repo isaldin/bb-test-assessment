@@ -14,8 +14,9 @@
         :title="card.title"
         :description="card.description"
         :edit-mode="currentlyEditingCardId === card.id"
-        @dblclick="(e) => handleCardDblClick(card.id)(e)"
+        @dblclick="(e: MouseEvent) => handleCardDblClick(card.id)(e)"
         @cancel:editing="startEditingCard(null)"
+        @update:card="(input: UpdateCardPayload) => handleUpdateCard(card.id, input)"
       />
 
       <new-card-view
@@ -37,6 +38,9 @@ import { useCard } from '@/compositions/card'
 import NewCardButton from '@/components/column/NewCardButton.vue'
 import NewCardView from '@/views/card/NewCardView.vue'
 import { computed } from 'vue'
+import type { Card } from '@/entities/card.ts'
+
+type UpdateCardPayload = Pick<Card, 'title' | 'description'>
 
 const emit = defineEmits<{
   (e: '@delete:column', columnId: string): void
@@ -54,6 +58,7 @@ const {
   newCardShownForColumnId,
   hideNewCardForColumn,
   createNewCard,
+  updateCard,
 } = useCard()
 
 const column = getColumnById(boardId, columnId)
@@ -95,6 +100,12 @@ const handleCardDblClick =
 
 const handleCreateNewCard = (title: string) => {
   createNewCard(columnId, title)
+}
+
+const handleUpdateCard = (cardId: string, input: UpdateCardPayload) => {
+  const card: Card = { id: cardId, columnId, ...input }
+  updateCard(card)
+  currentlyEditingCardId.value = null
 }
 </script>
 

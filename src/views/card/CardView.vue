@@ -42,6 +42,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  (e: 'update:card', card: { title: string; description?: string }): void
   (e: 'cancel:editing'): void
 }>()
 
@@ -61,7 +62,7 @@ const handleChangeDescription = (value: string) => {
 }
 
 const handleSaveChanges = () => {
-  console.log('Changes saved')
+  emit('update:card', { title: title.value, description: description.value || undefined })
 }
 
 const handleCancelChanges = () => {

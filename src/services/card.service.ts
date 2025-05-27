@@ -29,4 +29,14 @@ export class CardService {
     const columnCards = this.cards.value.get(columnId) || []
     this.cards.value.set(columnId, [...columnCards, ref(card)])
   }
+
+  public updateCard(card: Card) {
+    const columnCards = this.cards.value.get(card.columnId)
+    if (!columnCards) return
+
+    const index = columnCards.findIndex((c) => c.value.id === card.id)
+    if (index !== -1) {
+      columnCards[index].value = card
+    }
+  }
 }

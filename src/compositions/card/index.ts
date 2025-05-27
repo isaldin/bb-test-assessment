@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { ServiceLocator } from '@/services/service-locator.ts'
+import type { Card } from '@/entities/card.ts'
 
 const currentlyEditingCardId = ref<string | null>(null)
 
@@ -51,6 +52,10 @@ export const useCard = () => {
     return cardService.getCardsForColumn(columnId)
   }
 
+  const updateCard = (card: Card) => {
+    cardService.updateCard(card)
+  }
+
   return {
     initializeCards,
     getCardsForColumn,
@@ -60,5 +65,6 @@ export const useCard = () => {
     showNewCardForColumn,
     hideNewCardForColumn,
     createNewCard,
+    updateCard,
   }
 }
