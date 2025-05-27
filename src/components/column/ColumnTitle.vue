@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import EditableText from '@/components/EditableText.vue'
 import { ref, watch } from 'vue'
+import { setCursorToTheEnd } from '@/utils/setCursorToTheEnd.ts'
 
 defineProps<{ modelValue: string }>()
 
@@ -51,21 +52,7 @@ const handleCommit = (
   }
 }
 
-watch(divContentRef, (el) => {
-  if (!el) {
-    return
-  }
-
-  el.focus()
-
-  const range = document.createRange()
-  range.selectNodeContents(el)
-  range.collapse(false)
-
-  const sel = window.getSelection()
-  sel?.removeAllRanges()
-  sel?.addRange(range)
-})
+watch(divContentRef, setCursorToTheEnd)
 </script>
 
 <style lang="scss" scoped>
