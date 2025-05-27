@@ -73,4 +73,32 @@ export class ColumnService {
 
     this.columns.value.set(boardId, colRefs)
   }
+
+  public addNewColumn = (boardId: string) => {
+    const generateName = () => {
+      const getNameForOrderNumber = (orderNumber: number) => `Column ${orderNumber}`
+
+      const columns = this.getColumnsForBoard(boardId).value
+
+      let orderNumber = columns.length
+      while (columns.find((column) => column.name === getNameForOrderNumber(orderNumber))) {
+        orderNumber++
+      }
+
+      return getNameForOrderNumber(orderNumber)
+    }
+
+    const column: Column = {
+      id: crypto.randomUUID(),
+      name: generateName(),
+      boardId,
+      order: 0,
+      sortOrder: 'asc',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    }
+
+    const colRefs = this.columns.value.get(boardId) || []
+    this.columns.value.set(boardId, [...colRefs, ref(column)])
+  }
 }

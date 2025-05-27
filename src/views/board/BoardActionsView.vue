@@ -1,7 +1,7 @@
 <template>
   <div class="board-actions-view">
     <div class="board-actions-view__buttons">
-      <button-with-icon>
+      <button-with-icon @click="$emit('new-column')">
         New column
         <template #icon>
           <icon-plus />
@@ -39,6 +39,10 @@ import ButtonWithIcon from '@/components/ButtonWithIcon.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconShuffle from '@/components/icons/IconShuffle.vue'
 import IconPause from '@/components/icons/IconPause.vue'
+
+defineEmits<{
+  (e: 'new-column'): void
+}>()
 </script>
 
 <style lang="scss" scoped>

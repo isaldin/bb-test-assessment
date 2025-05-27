@@ -32,11 +32,16 @@ export const useColumn = () => {
     columnService.saveColumn(column)
   }
 
+  const addNewColumn = (boardId: string) => {
+    columnService.addNewColumn(boardId)
+  }
+
   return {
     isLoading,
     initializeColumns,
     getColumnsForBoard,
     getColumnById,
     updateColumn,
+    addNewColumn,
   }
 }

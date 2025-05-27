@@ -9,7 +9,7 @@
       />
     </div>
     <div class="board-view__actions">
-      <board-actions-view />
+      <board-actions-view @new-column="handleNewColumnClick" />
     </div>
   </div>
 </template>
@@ -21,11 +21,15 @@ import ColumnView from '@/views/column/ColumnView.vue'
 
 const { boardId } = defineProps<{ boardId: string }>()
 
-const { getColumnsForBoard, initializeColumns } = useColumn()
+const { getColumnsForBoard, initializeColumns, addNewColumn } = useColumn()
 
 initializeColumns(boardId)
 
 const columns = getColumnsForBoard(boardId)
+
+const handleNewColumnClick = () => {
+  addNewColumn(boardId)
+}
 </script>
 
 <style lang="scss" scoped>
