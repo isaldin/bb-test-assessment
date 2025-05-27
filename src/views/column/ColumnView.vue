@@ -15,6 +15,8 @@
         @dblclick="(e) => handleCardDblClick('card-1')(e)"
         @cancel:editing="startEditingCard(null)"
       />
+
+      <new-card-button />
     </div>
   </div>
 </template>
@@ -24,6 +26,7 @@ import { useColumn } from '@/compositions/column'
 import ColumnTitleView from '@/views/column/ColumnTitleView.vue'
 import CardView from '@/views/card/CardView.vue'
 import { useCard } from '@/compositions/card'
+import NewCardButton from '@/components/column/NewCardButton.vue'
 
 const emit = defineEmits<{
   (e: '@delete:column', columnId: string): void
@@ -75,6 +78,9 @@ const handleCardDblClick =
 
   &__cards {
     margin-top: 16px;
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>
