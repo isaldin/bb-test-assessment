@@ -2,8 +2,12 @@
   <div class="card-description">
     <editable-text :editable="editable" @save="emit('update:modelValue', $event)">
       <template #default="slotProps">
-        <div class="card-description__display" @click="slotProps.switchToEdit">
-          {{ modelValue }}
+        <div
+          class="card-description__display"
+          :class="{ 'card-description__display--bold': !modelValue }"
+          @click="slotProps.switchToEdit"
+        >
+          {{ modelValue || 'Add description' }}
         </div>
       </template>
 
@@ -80,6 +84,10 @@ watch(divContentRef, (el) => {
     -webkit-line-clamp: 2;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    &--bold {
+      font-weight: 600;
+    }
   }
 
   &__edit {

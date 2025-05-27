@@ -83,7 +83,9 @@ const handleDisableColumn = () => {
 
 const handleCardDblClick =
   (cardId: string) =>
-  (_): void => {
+  (e: MouseEvent): void => {
+    e.stopPropagation()
+
     if (currentlyEditingCardId.value === 'card-1') {
       return
     }
