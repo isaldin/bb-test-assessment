@@ -1,15 +1,21 @@
 <template>
   <card-view-layout :with-border="editMode">
-    <card-title :editable="editMode" :model-value="title" @update:model-value="handleUpdateTitle" />
+    <card-title
+      :model-value="title"
+      :editable="editMode"
+      @commit:changes="handleCommitTitleChanges"
+      @update:model-value="handleChangeTitle"
+    />
 
     <card-description
       :model-value="description"
       :editable="editMode"
-      @update:model-value="handleUpdateDescription"
+      @commit:changes="handleCommitDescriptionChanges"
+      @update:model-value="handleChangeDescription"
     />
 
     <div v-if="editMode" class="card-view__actions">
-      <button-with-icon @click="handleSaveChanges">
+      <button-with-icon :disabled="savingDisabled" @click="handleSaveChanges">
         Save changes
         <template #icon>
           <icon-flash />
@@ -33,8 +39,9 @@ import IconFlash from '@/components/icons/IconFlash.vue'
 import IconMinus from '@/components/icons/IconMinus.vue'
 import CardDescription from '@/components/card/CardDescription.vue'
 import CardViewLayout from '@/views/card/CardViewLayout.vue'
+import { computed, ref } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   title: string
   description?: string
   editMode?: boolean
@@ -44,12 +51,34 @@ const emit = defineEmits<{
   (e: 'cancel:editing'): void
 }>()
 
-const handleUpdateTitle = (newTitle: string) => {
-  console.log('Updated title:', newTitle)
+const title = ref(props.title)
+const description = ref(props.description)
+
+const titleChanged = ref(false)
+const descriptionChanged = ref(false)
+
+const savingDisabled = computed(() => {
+  if (!descriptionChanged.value) {
+    return !titleChanged.value
+  }
+
+  return !titleChanged.value && !descriptionChanged.value
+})
+
+const handleChangeTitle = (newTitle: string) => {
+  titleChanged.value = newTitle !== props.title
 }
 
-const handleUpdateDescription = (newDescription: string) => {
-  console.log('Updated description:', newDescription)
+const handleCommitTitleChanges = (value: string) => {
+  title.value = value
+}
+
+const handleChangeDescription = (newDescription: string) => {
+  descriptionChanged.value = newDescription !== (props.description || '')
+}
+
+const handleCommitDescriptionChanges = (value: string) => {
+  description.value = value
 }
 
 const handleSaveChanges = () => {
@@ -57,6 +86,8 @@ const handleSaveChanges = () => {
 }
 
 const handleCancelChanges = () => {
+  title.value = props.title
+  description.value = props.description
   emit('cancel:editing')
 }
 </script>

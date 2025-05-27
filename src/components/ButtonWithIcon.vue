@@ -1,5 +1,5 @@
 <template>
-  <button class="button-with-icon">
+  <button class="button-with-icon" :disabled="disabled">
     <div class="button-with-icon__icon">
       <slot name="icon" />
     </div>
@@ -9,7 +9,11 @@
   </button>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+defineProps<{
+  disabled?: boolean
+}>()
+</script>
 
 <style lang="scss" scoped>
 .button-with-icon {

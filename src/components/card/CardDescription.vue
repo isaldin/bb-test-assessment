@@ -16,6 +16,7 @@
           ref="divContentRef"
           contenteditable
           class="card-description__edit"
+          @input="handleInput"
           @keydown="handleCommit($event, slotProps.commit, slotProps.cancel)"
           @blur="slotProps.cancel"
         >
@@ -38,6 +39,7 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'commit:changes', value: string): void
 }>()
 
 const divContentRef = ref<HTMLDivElement>()
@@ -56,8 +58,17 @@ const handleCommit = (
     return
   }
 
-  if (divContentRef.value?.textContent) {
-    commitFn(divContentRef.value.textContent)
+  const textContent = divContentRef.value?.textContent
+  if (textContent != null) {
+    commitFn(textContent)
+    emit('commit:changes', textContent)
+  }
+}
+
+const handleInput = () => {
+  if (divContentRef.value) {
+    const text = divContentRef.value.textContent || ''
+    emit('update:modelValue', text)
   }
 }
 
