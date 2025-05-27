@@ -1,16 +1,10 @@
 <template>
   <card-view-layout :with-border="editMode">
-    <card-title
-      :model-value="title"
-      :editable="editMode"
-      @commit:changes="handleCommitTitleChanges"
-      @update:model-value="handleChangeTitle"
-    />
+    <card-title :model-value="title" :editable="editMode" @update:model-value="handleChangeTitle" />
 
     <card-description
       :model-value="description"
       :editable="editMode"
-      @commit:changes="handleCommitDescriptionChanges"
       @update:model-value="handleChangeDescription"
     />
 
@@ -52,32 +46,17 @@ const emit = defineEmits<{
 }>()
 
 const title = ref(props.title)
-const description = ref(props.description)
-
-const titleChanged = ref(false)
-const descriptionChanged = ref(false)
+const description = ref(props.description || '')
 
 const savingDisabled = computed(() => {
-  if (!descriptionChanged.value) {
-    return !titleChanged.value
-  }
-
-  return !titleChanged.value && !descriptionChanged.value
+  return title.value === props.title && description.value === (props.description || '')
 })
 
-const handleChangeTitle = (newTitle: string) => {
-  titleChanged.value = newTitle !== props.title
-}
-
-const handleCommitTitleChanges = (value: string) => {
+const handleChangeTitle = (value: string) => {
   title.value = value
 }
 
-const handleChangeDescription = (newDescription: string) => {
-  descriptionChanged.value = newDescription !== (props.description || '')
-}
-
-const handleCommitDescriptionChanges = (value: string) => {
+const handleChangeDescription = (value: string) => {
   description.value = value
 }
 
@@ -87,7 +66,7 @@ const handleSaveChanges = () => {
 
 const handleCancelChanges = () => {
   title.value = props.title
-  description.value = props.description
+  description.value = props.description || ''
   emit('cancel:editing')
 }
 </script>
