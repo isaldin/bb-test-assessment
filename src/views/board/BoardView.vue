@@ -22,6 +22,7 @@
 import BoardActionsView from '@/views/board/BoardActionsView.vue'
 import { useColumn } from '@/compositions/column'
 import ColumnView from '@/views/column/ColumnView.vue'
+import { computed } from 'vue'
 
 const { boardId } = defineProps<{ boardId: string }>()
 
@@ -30,7 +31,7 @@ const { getColumnsForBoard, initializeColumns, addNewColumn, shuffleColumns, del
 
 initializeColumns(boardId)
 
-const columns = getColumnsForBoard(boardId)
+const columns = computed(() => getColumnsForBoard(boardId))
 
 const handleNewColumnClick = () => {
   addNewColumn(boardId)
@@ -41,7 +42,7 @@ const handleShuffleColumnsClick = () => {
 }
 
 const handleDeleteColumn = (columnId: string) => {
-  deleteColumn(boardId, columnId)
+  deleteColumn(columnId)
 }
 </script>
 

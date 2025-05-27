@@ -11,7 +11,7 @@ export const useColumn = () => {
     isLoading.value = true
     try {
       const columns = await columnService.fetchColumns(boardId)
-      columnService.saveColumns(boardId, columns)
+      columnService.saveColumns(columns)
     } catch (error) {
       console.error('Error fetching columns:', error)
       throw error
@@ -24,8 +24,8 @@ export const useColumn = () => {
     return columnService.getColumnsForBoard(boardId)
   }
 
-  const getColumnById = (boardId: string, columnId: string) => {
-    return columnService.getColumnById(boardId, columnId)
+  const getColumnById = (columnId: string) => {
+    return columnService.getColumnById(columnId)
   }
 
   const updateColumn = (column: Column) => {
@@ -40,8 +40,8 @@ export const useColumn = () => {
     columnService.shuffleColumns(boardId)
   }
 
-  const deleteColumn = (boardId: string, columnId: string) => {
-    columnService.deleteColumn(boardId, columnId)
+  const deleteColumn = (columnId: string) => {
+    columnService.deleteColumn(columnId)
   }
 
   return {
