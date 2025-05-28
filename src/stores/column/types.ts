@@ -17,6 +17,8 @@ export type ColumnActions = {
   deleteColumn: (columnId: string) => void
   addColumn: (column: Column) => void
   shuffleCards: (columnId: string) => void
+  disableColumn: (columnId: string) => void
+  enableColumn: (columnId: string) => void
 }
 
 export type ColumnStore = Store<'columns', ColumnState, ColumnGetters, ColumnActions>

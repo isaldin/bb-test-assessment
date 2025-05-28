@@ -37,4 +37,20 @@ export const actions: ColumnActions = {
 
     column.sortOrder = 'shuffle'
   },
+  disableColumn(this: ColumnStore, columnId: string) {
+    const column = this.getColumnById(columnId)
+    if (!column) {
+      return
+    }
+
+    column.disabled = true
+  },
+  enableColumn(this: ColumnStore, columnId: string) {
+    const column = this.getColumnById(columnId)
+    if (!column) {
+      return
+    }
+
+    column.disabled = false
+  },
 }

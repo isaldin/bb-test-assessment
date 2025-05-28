@@ -1,10 +1,14 @@
 <template>
   <div v-if="column" class="column-view">
+    <div class="column-view__disabled-overlay" v-if="column.disabled"></div>
+
     <column-title-view
+      :disabled="!!column.disabled"
       :title="column.name"
       @update:title="handleUpdateTitle"
       @delete:column="handleDeleteColumn"
       @disable:column="handleDisableColumn"
+      @enable:column="handleEnableColumn"
     />
 
     <div class="column-view__cards">
@@ -58,7 +62,7 @@ const emit = defineEmits<{
 
 const { columnId } = defineProps<{ columnId: string }>()
 
-const { getColumnById, updateColumn } = useColumn()
+const { getColumnById, updateColumn, disableColumn, enableColumn } = useColumn()
 const {
   initializeCards,
   getCardsForColumn,
@@ -95,7 +99,11 @@ const handleDeleteColumn = () => {
 }
 
 const handleDisableColumn = () => {
-  console.log('Disable column:', columnId)
+  disableColumn(columnId)
+}
+
+const handleEnableColumn = () => {
+  enableColumn(columnId)
 }
 
 const handleCardDblClick =
@@ -138,12 +146,24 @@ const handleClearCards = () => {
 .column-view {
   display: flex;
   flex-direction: column;
+  position: relative;
   background: #eceff2;
   border-radius: 12px;
   width: 448px;
   min-height: 902px;
   flex-shrink: 0;
   padding: 16px 16px 20px;
+
+  &__disabled-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    z-index: 1;
+  }
 
   &__cards {
     margin-top: 16px;

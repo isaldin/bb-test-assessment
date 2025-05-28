@@ -48,6 +48,14 @@ export const useColumn = () => {
     columnService.shuffleCards(columnId)
   }
 
+  const disableColumn = (columnId: string) => {
+    columnService.disableColumn(columnId)
+  }
+
+  const enableColumn = (columnId: string) => {
+    columnService.enableColumn(columnId)
+  }
+
   return {
     isLoading,
     initializeColumns,
@@ -58,5 +66,7 @@ export const useColumn = () => {
     shuffleColumns,
     deleteColumn,
     shuffleCards,
+    disableColumn,
+    enableColumn,
   }
 }

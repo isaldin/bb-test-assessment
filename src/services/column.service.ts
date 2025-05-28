@@ -70,4 +70,12 @@ export class ColumnService {
   public shuffleCards(columnId: string) {
     this.store.shuffleCards(columnId)
   }
+
+  public disableColumn(columnId: string) {
+    this.store.disableColumn(columnId)
+  }
+
+  public enableColumn(columnId: string) {
+    this.store.enableColumn(columnId)
+  }
 }
