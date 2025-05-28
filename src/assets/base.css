@@ -1,11 +1,8 @@
 :root {
   --color-gray: rgba(0, 0, 0, 0.3);
+  --color-dark-gray: rgba(0, 0, 0, 0.6);
   --color-black: rgba(0, 0, 0, 0.9);
   --color-white: #ffffff;
-}
-
-/* semantic color variables for this project */
-:root {
 }
 
 *,

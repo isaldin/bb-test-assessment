@@ -3,6 +3,7 @@
     <editable-text @save="emit('update:modelValue', $event)">
       <template #default="slotProps">
         <div class="column-title__display" @click="slotProps.switchToEdit">{{ modelValue }}</div>
+        <span class="column-title__cards-count">{{ cardsCount }}</span>
       </template>
 
       <template #editable="slotProps">
@@ -25,7 +26,10 @@ import EditableText from '@/components/EditableText.vue'
 import { ref, watch } from 'vue'
 import { setCursorToTheEnd } from '@/utils/setCursorToTheEnd.ts'
 
-defineProps<{ modelValue: string }>()
+defineProps<{
+  modelValue: string
+  cardsCount: number
+}>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
@@ -65,10 +69,15 @@ watch(divContentRef, setCursorToTheEnd)
   &__display {
     cursor: pointer;
     user-select: none;
-    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__cards-count {
+    margin-left: 8px;
+    color: var(--color-dark-gray);
+    font-size: 13px;
   }
 
   &__edit {

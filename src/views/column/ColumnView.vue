@@ -5,6 +5,7 @@
     <column-title-view
       :disabled="!!column.disabled"
       :title="column.name"
+      :cards-count="cardCount"
       @update:title="handleUpdateTitle"
       @delete:column="handleDeleteColumn"
       @disable:column="handleDisableColumn"
@@ -84,6 +85,8 @@ initializeCards(columnId)
 
 const sortOrder = computed(() => column.value?.sortOrder || 'asc')
 const cards = computed(() => getCardsForColumn(columnId, sortOrder.value).value ?? [])
+
+const cardCount = computed(() => cards.value.length)
 
 const handleUpdateTitle = (title: string) => {
   if (!column.value) {

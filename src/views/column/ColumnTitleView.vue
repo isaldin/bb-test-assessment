@@ -3,6 +3,7 @@
     <column-title
       class="column-title-view__text"
       :model-value="title"
+      :cards-count="cardsCount"
       @update:model-value="$emit('update:title', $event)"
     />
 
@@ -44,6 +45,7 @@ import IconPlay from '@/components/icons/IconPlay.vue'
 defineProps<{
   title: string
   disabled: boolean
+  cardsCount: number
 }>()
 
 defineEmits<{
