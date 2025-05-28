@@ -59,4 +59,17 @@ export class CardService {
   public clearCards(columnId: string) {
     this.cards.value.delete(columnId)
   }
+
+  public deleteCard(columnId: string, cardId: string) {
+    const columnCards = this.cards.value.get(columnId)
+    if (!columnCards) return
+
+    const index = columnCards.findIndex((c) => c.value.id === cardId)
+    if (index !== -1) {
+      columnCards.splice(index, 1)
+      if (columnCards.length === 0) {
+        this.cards.value.delete(columnId)
+      }
+    }
+  }
 }

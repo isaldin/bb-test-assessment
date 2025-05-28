@@ -65,6 +65,10 @@ export const useCard = () => {
     cardService.clearCards(columnId)
   }
 
+  const deleteCard = (columnId: string, cardId: string) => {
+    cardService.deleteCard(columnId, cardId)
+  }
+
   return {
     initializeCards,
     getCardsForColumn,
@@ -76,5 +80,6 @@ export const useCard = () => {
     createNewCard,
     updateCard,
     clearCards,
+    deleteCard,
   }
 }

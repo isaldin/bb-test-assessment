@@ -20,6 +20,7 @@
         :description="card.description"
         :edit-mode="currentlyEditingCardId === card.id"
         @dblclick="(e: MouseEvent) => handleCardDblClick(card.id)(e)"
+        @contextmenu.prevent="(e: MouseEvent) => handleCardRightClick(card.id)(e)"
         @cancel:editing="startEditingCard(null)"
         @update:card="(input: UpdateCardPayload) => handleUpdateCard(card.id, input)"
       />
@@ -75,6 +76,7 @@ const {
   createNewCard,
   updateCard,
   clearCards,
+  deleteCard,
 } = useCard()
 
 const column = computed(() => getColumnById(columnId))
@@ -123,6 +125,11 @@ const handleCardDblClick =
 
     startEditingCard(cardId)
   }
+
+const handleCardRightClick = (cardId: string) => (e: MouseEvent) => {
+  e.preventDefault()
+  deleteCard(columnId, cardId)
+}
 
 const handleCreateNewCard = (title: string) => {
   createNewCard(columnId, title)
