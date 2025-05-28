@@ -50,7 +50,7 @@ export class ColumnService {
       id: crypto.randomUUID(),
       name: generateName(),
       boardId,
-      order: 0,
+      shuffleKey: 0,
       sortOrder: 'asc',
       createdAt: Date.now(),
       updatedAt: Date.now(),

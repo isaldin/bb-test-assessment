@@ -49,7 +49,11 @@ export const useCard = () => {
     cardService.addCard(columnId, title)
   }
 
-  const getCardsForColumn = (columnId: string, sortOrder: Column['sortOrder']) => {
+  const getCardsForColumn = (
+    columnId: string,
+    sortOrder: Column['sortOrder'],
+    _shuffleKey?: number,
+  ) => {
     return cardService.getCardsForColumn(columnId, sortOrder)
   }
 

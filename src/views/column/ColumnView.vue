@@ -84,7 +84,10 @@ const newCardShown = computed(() => newCardShownForColumnId.value === columnId)
 initializeCards(columnId)
 
 const sortOrder = computed(() => column.value?.sortOrder || 'asc')
-const cards = computed(() => getCardsForColumn(columnId, sortOrder.value).value ?? [])
+const cards = computed(() => {
+  const shuffleKey = column.value?.shuffleKey
+  return getCardsForColumn(columnId, sortOrder.value, shuffleKey).value ?? []
+})
 
 const cardCount = computed(() => cards.value.length)
 
