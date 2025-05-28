@@ -11,13 +11,13 @@ export const actions: ColumnActions = {
     this.items = columns
   },
   shuffleColumns(this: ColumnStore, boardId: string) {
-    const columns = this.getColumnsByBoardId(boardId)
+    const columns = [...this.getColumnsByBoardId(boardId)]
     if (columns.length === 0) {
       return
     }
 
     for (let i = columns.length - 1; i > 0; i--) {
-      const j = randomInteger(0, columns.length - 1)
+      const j = randomInteger(0, i)
       ;[columns[i], columns[j]] = [columns[j], columns[i]]
     }
 
@@ -29,14 +29,26 @@ export const actions: ColumnActions = {
   addColumn(this: ColumnStore, column: Column) {
     this.items.push(column)
   },
+  updateColumn(this: ColumnStore, column: Column) {
+    const index = this.items.findIndex((col) => col.id === column.id)
+
+    if (index === -1) {
+      return
+    }
+
+    this.items[index] = { ...this.items[index], ...column }
+  },
   shuffleCards(this: ColumnStore, columnId: string) {
     const column = this.getColumnById(columnId)
     if (!column) {
       return
     }
 
-    column.sortOrder = 'shuffle'
-    column.shuffleKey = column.shuffleKey + 1
+    this.updateColumn({
+      id: columnId,
+      sortOrder: 'shuffle',
+      shuffleKey: column.shuffleKey + 1,
+    })
   },
   disableColumn(this: ColumnStore, columnId: string) {
     const column = this.getColumnById(columnId)

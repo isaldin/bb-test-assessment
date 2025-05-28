@@ -1,5 +1,6 @@
 import type { Column } from '@/entities/column.ts'
 import { useColumnStore } from '@/stores/column'
+import { getRandomUuid } from '@/utils/getRandomUuid.ts'
 
 type ColumnStore = ReturnType<typeof useColumnStore>
 
@@ -26,9 +27,11 @@ export class ColumnService {
   }
 
   public saveColumn(column: Column) {
-    const columnIdx = this.store.items.findIndex((item) => item.id === column.id)
-    if (columnIdx === -1) {
-      this.store.items[columnIdx] = { ...this.store.items[columnIdx], ...column }
+    const existingColumn = this.store.getColumnById(column.id)
+    if (existingColumn) {
+      this.store.updateColumn(column)
+    } else {
+      this.store.addColumn(column)
     }
   }
 
@@ -46,17 +49,7 @@ export class ColumnService {
       return getNameForOrderNumber(orderNumber)
     }
 
-    const column: Column = {
-      id: crypto.randomUUID(),
-      name: generateName(),
-      boardId,
-      shuffleKey: 0,
-      sortOrder: 'asc',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    }
-
-    this.store.addColumn(column)
+    this.store.addColumn(this.createColumn(generateName(), boardId))
   }
 
   public shuffleColumns(boardId: string) {
@@ -77,5 +70,17 @@ export class ColumnService {
 
   public enableColumn(columnId: string) {
     this.store.enableColumn(columnId)
+  }
+
+  private createColumn(name: string, boardId: string): Column {
+    return {
+      id: getRandomUuid(),
+      name,
+      boardId,
+      shuffleKey: 0,
+      sortOrder: 'asc',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    }
   }
 }
