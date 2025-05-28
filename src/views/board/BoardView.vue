@@ -81,13 +81,14 @@ const handleEnableColumnsClick = () => {
   background: var(--color-white);
   min-width: 100%;
   min-height: 100vh;
-  padding: 24px;
+  padding: 24px 0;
 
   &__columns {
     display: flex;
     flex: 1;
     gap: 24px;
     overflow-y: auto;
+    padding: 0 24px;
   }
 
   &__actions {
