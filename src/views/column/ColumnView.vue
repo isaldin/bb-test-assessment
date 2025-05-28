@@ -88,7 +88,7 @@ initializeCards(columnId)
 const sortOrder = computed(() => column.value?.sortOrder || 'asc')
 const cards = computed(() => {
   const shuffleKey = column.value?.shuffleKey
-  return getCardsForColumn(columnId, sortOrder.value, shuffleKey).value ?? []
+  return getCardsForColumn(columnId, sortOrder.value, shuffleKey)
 })
 
 const cardCount = computed(() => cards.value.length)
@@ -119,7 +119,7 @@ const handleCardDblClick =
   (e: MouseEvent): void => {
     e.stopPropagation()
 
-    if (currentlyEditingCardId.value === 'card-1') {
+    if (currentlyEditingCardId.value === cardId) {
       return
     }
 
@@ -128,7 +128,7 @@ const handleCardDblClick =
 
 const handleCardRightClick = (cardId: string) => (e: MouseEvent) => {
   e.preventDefault()
-  deleteCard(columnId, cardId)
+  deleteCard(cardId)
 }
 
 const handleCreateNewCard = (title: string) => {

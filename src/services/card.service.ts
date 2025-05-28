@@ -1,75 +1,66 @@
-import { computed, type ComputedRef, type Ref, ref } from 'vue'
 import type { Card } from '@/entities/card.ts'
 import type { Column } from '@/entities/column.ts'
+import type { CardStore } from '@/stores/card/types.ts'
+import { useCardStore } from '@/stores/card'
+import { randomInteger } from '@/utils/randomInteger.ts'
 
 export class CardService {
-  private cards = ref(new Map<string, Ref<Card>[]>())
+  private readonly store: CardStore
+
+  constructor() {
+    this.store = useCardStore()
+  }
 
   public fetchCards(columnId: string): Promise<Card[]> {
-    return Promise.resolve([
-      { id: crypto.randomUUID(), columnId, title: 'Sample Card' },
-      { id: crypto.randomUUID(), columnId, title: 'Some another Sample Card' },
-      { id: crypto.randomUUID(), columnId, title: 'Yet another Sample Card' },
-    ] satisfies Card[])
+    return this.store.fetchCards(columnId)
   }
 
-  public getCardsForColumn(columnId: string, sortOrder: Column['sortOrder']): ComputedRef<Card[]> {
-    return computed(() => {
-      const cardRefs = this.cards.value.get(columnId) || []
+  public getCardsForColumn(columnId: string, sortOrder: Column['sortOrder']) {
+    const cards = this.store.getCardsByColumnId(columnId)
 
-      if (sortOrder !== 'shuffle') {
-        return cardRefs
-          .map((cardRef) => cardRef.value)
-          .sort((a, b) => {
-            const sortValue = a.title.localeCompare(b.title)
-            return sortOrder === 'asc' ? sortValue : -sortValue
-          })
+    if (sortOrder === 'asc') {
+      return [...cards].sort((a, b) => a.title.localeCompare(b.title))
+    }
+
+    if (sortOrder === 'desc') {
+      return [...cards].sort((a, b) => b.title.localeCompare(a.title))
+    }
+
+    if (sortOrder === 'shuffle') {
+      const seeded = [...cards]
+      for (let i = seeded.length - 1; i > 0; i--) {
+        const j = randomInteger(0, i)
+        ;[seeded[i], seeded[j]] = [seeded[j], seeded[i]]
       }
-
-      // if we need to shuffle multiple times, we should use an order prop for sorting
-      return cardRefs.map((cardRef) => cardRef.value).sort(() => Math.random() - 0.5)
-    })
+      return seeded
+    }
   }
 
-  public saveCards(columnId: string, cards: Card[]) {
-    const wrapped = cards.map((card) => ref(card))
-    this.cards.value.set(columnId, wrapped)
+  public saveCards(cards: Card[]) {
+    this.store.saveCards(cards)
   }
 
   public addCard(columnId: string, title: string) {
-    const card: Card = {
-      id: crypto.randomUUID(),
-      title,
-      columnId,
-    }
-    const columnCards = this.cards.value.get(columnId) || []
-    this.cards.value.set(columnId, [...columnCards, ref(card)])
+    this.store.addCard(this.createCard(columnId, title))
   }
 
   public updateCard(card: Card) {
-    const columnCards = this.cards.value.get(card.columnId)
-    if (!columnCards) return
-
-    const index = columnCards.findIndex((c) => c.value.id === card.id)
-    if (index !== -1) {
-      columnCards[index].value = card
-    }
+    this.store.updateCard(card)
   }
 
   public clearCards(columnId: string) {
-    this.cards.value.delete(columnId)
+    this.store.deleteCardsForColumn(columnId)
   }
 
-  public deleteCard(columnId: string, cardId: string) {
-    const columnCards = this.cards.value.get(columnId)
-    if (!columnCards) return
+  public deleteCard(cardId: string) {
+    this.store.deleteCard(cardId)
+  }
 
-    const index = columnCards.findIndex((c) => c.value.id === cardId)
-    if (index !== -1) {
-      columnCards.splice(index, 1)
-      if (columnCards.length === 0) {
-        this.cards.value.delete(columnId)
-      }
+  private createCard(columnId: string, title: string): Card {
+    return {
+      id: crypto.randomUUID(),
+      title,
+      columnId,
     }
   }
 }

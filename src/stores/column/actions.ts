@@ -29,14 +29,14 @@ export const actions: ColumnActions = {
   addColumn(this: ColumnStore, column: Column) {
     this.items.push(column)
   },
-  updateColumn(this: ColumnStore, column: Column) {
+  updateColumn(this: ColumnStore, column: Partial<Column>) {
     const index = this.items.findIndex((col) => col.id === column.id)
 
     if (index === -1) {
       return
     }
 
-    this.items[index] = { ...this.items[index], ...column }
+    Object.assign(this.items[index], column)
   },
   shuffleCards(this: ColumnStore, columnId: string) {
     const column = this.getColumnById(columnId)

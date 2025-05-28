@@ -16,7 +16,7 @@ export const useCard = () => {
     isLoading.value = true
     try {
       const cards = await cardService.fetchCards(columnId)
-      cardService.saveCards(columnId, cards)
+      cardService.saveCards(cards)
     } catch (error) {
       throw error
     } finally {
@@ -65,8 +65,8 @@ export const useCard = () => {
     cardService.clearCards(columnId)
   }
 
-  const deleteCard = (columnId: string, cardId: string) => {
-    cardService.deleteCard(columnId, cardId)
+  const deleteCard = (cardId: string) => {
+    cardService.deleteCard(cardId)
   }
 
   return {
