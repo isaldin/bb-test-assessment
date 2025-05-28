@@ -22,7 +22,13 @@
         </template>
       </button-with-icon>
 
-      <button-with-icon>
+      <button-with-icon v-if="columnsDisabled" @click="$emit('enable-columns')">
+        Enable columns
+        <template #icon>
+          <icon-start />
+        </template>
+      </button-with-icon>
+      <button-with-icon v-else @click="$emit('disable-columns')">
         Disable editing
         <template #icon>
           <icon-pause />
@@ -39,11 +45,18 @@ import ButtonWithIcon from '@/components/ButtonWithIcon.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconShuffle from '@/components/icons/IconShuffle.vue'
 import IconPause from '@/components/icons/IconPause.vue'
+import IconStart from '@/components/icons/IconPlay.vue'
+
+defineProps<{
+  columnsDisabled: boolean
+}>()
 
 defineEmits<{
   (e: 'new-column'): void
   (e: 'shuffle-columns'): void
   (e: 'shuffle-cards'): void
+  (e: 'disable-columns'): void
+  (e: 'enable-columns'): void
 }>()
 </script>
 

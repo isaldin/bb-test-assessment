@@ -11,9 +11,12 @@
     </div>
     <div class="board-view__actions">
       <board-actions-view
+        :columns-disabled="allColumnsDisabled"
         @new-column="handleNewColumnClick"
         @shuffle-columns="handleShuffleColumnsClick"
         @shuffle-cards="handleShuffleCardsClick"
+        @disable-columns="handleDisableColumnsClick"
+        @enable-columns="handleEnableColumnsClick"
       />
     </div>
   </div>
@@ -34,11 +37,17 @@ const {
   shuffleColumns,
   deleteColumn,
   shuffleCards,
+  disableColumn,
+  enableColumn,
 } = useColumn()
 
 initializeColumns(boardId)
 
 const columns = computed(() => getColumnsForBoard(boardId))
+
+const allColumnsDisabled = computed(() => {
+  return columns.value.every((column) => column.disabled)
+})
 
 const handleNewColumnClick = () => {
   addNewColumn(boardId)
@@ -54,6 +63,14 @@ const handleDeleteColumn = (columnId: string) => {
 
 const handleShuffleCardsClick = () => {
   columns.value.forEach((column) => shuffleCards(column.id))
+}
+
+const handleDisableColumnsClick = () => {
+  columns.value.forEach((column) => disableColumn(column.id))
+}
+
+const handleEnableColumnsClick = () => {
+  columns.value.forEach((column) => enableColumn(column.id))
 }
 </script>
 
