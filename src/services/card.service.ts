@@ -7,33 +7,27 @@ export class CardService {
 
   public fetchCards(columnId: string): Promise<Card[]> {
     return Promise.resolve([
-      {
-        id: crypto.randomUUID(),
-        columnId,
-        title: 'Sample Card',
-      },
-      {
-        id: crypto.randomUUID(),
-        columnId,
-        title: 'Some another Sample Card',
-      },
-      {
-        id: crypto.randomUUID(),
-        columnId,
-        title: 'Yet another Sample Card',
-      },
+      { id: crypto.randomUUID(), columnId, title: 'Sample Card' },
+      { id: crypto.randomUUID(), columnId, title: 'Some another Sample Card' },
+      { id: crypto.randomUUID(), columnId, title: 'Yet another Sample Card' },
     ] satisfies Card[])
   }
 
   public getCardsForColumn(columnId: string, sortOrder: Column['sortOrder']): ComputedRef<Card[]> {
     return computed(() => {
       const cardRefs = this.cards.value.get(columnId) || []
-      return cardRefs
-        .map((cardRef) => cardRef.value)
-        .sort((a, b) => {
-          const sortValue = a.title.localeCompare(b.title)
-          return sortOrder === 'asc' ? sortValue : -sortValue
-        })
+
+      if (sortOrder !== 'shuffle') {
+        return cardRefs
+          .map((cardRef) => cardRef.value)
+          .sort((a, b) => {
+            const sortValue = a.title.localeCompare(b.title)
+            return sortOrder === 'asc' ? sortValue : -sortValue
+          })
+      }
+
+      // if we need to shuffle multiple times, we should use an order prop for sorting
+      return cardRefs.map((cardRef) => cardRef.value).sort(() => Math.random() - 0.5)
     })
   }
 

@@ -66,4 +66,8 @@ export class ColumnService {
   public deleteColumn(columnId: string) {
     this.store.deleteColumn(columnId)
   }
+
+  public shuffleCards(columnId: string) {
+    this.store.shuffleCards(columnId)
+  }
 }

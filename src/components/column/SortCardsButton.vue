@@ -20,9 +20,10 @@
 import ButtonWithIcon from '@/components/ButtonWithIcon.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
+import type { Column } from '@/entities/column.ts'
 
 defineProps<{
-  sortOrder: 'asc' | 'desc'
+  sortOrder: Column['sortOrder']
 }>()
 </script>
 

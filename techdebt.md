@@ -1,1 +1,2 @@
 - [ ] unify CardTitle and CardDescription components
+- [ ] use `order` prop in `Card` for sorting

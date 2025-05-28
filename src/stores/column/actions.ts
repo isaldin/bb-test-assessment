@@ -29,4 +29,12 @@ export const actions: ColumnActions = {
   addColumn(this: ColumnStore, column: Column) {
     this.items.push(column)
   },
+  shuffleCards(this: ColumnStore, columnId: string) {
+    const column = this.getColumnById(columnId)
+    if (!column) {
+      return
+    }
+
+    column.sortOrder = 'shuffle'
+  },
 }

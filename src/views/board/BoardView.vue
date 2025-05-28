@@ -13,6 +13,7 @@
       <board-actions-view
         @new-column="handleNewColumnClick"
         @shuffle-columns="handleShuffleColumnsClick"
+        @shuffle-cards="handleShuffleCardsClick"
       />
     </div>
   </div>
@@ -26,8 +27,14 @@ import { computed } from 'vue'
 
 const { boardId } = defineProps<{ boardId: string }>()
 
-const { getColumnsForBoard, initializeColumns, addNewColumn, shuffleColumns, deleteColumn } =
-  useColumn()
+const {
+  getColumnsForBoard,
+  initializeColumns,
+  addNewColumn,
+  shuffleColumns,
+  deleteColumn,
+  shuffleCards,
+} = useColumn()
 
 initializeColumns(boardId)
 
@@ -43,6 +50,10 @@ const handleShuffleColumnsClick = () => {
 
 const handleDeleteColumn = (columnId: string) => {
   deleteColumn(columnId)
+}
+
+const handleShuffleCardsClick = () => {
+  columns.value.forEach((column) => shuffleCards(column.id))
 }
 </script>
 

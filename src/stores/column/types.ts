@@ -16,6 +16,7 @@ export type ColumnActions = {
   shuffleColumns: (boardId: string) => void
   deleteColumn: (columnId: string) => void
   addColumn: (column: Column) => void
+  shuffleCards: (columnId: string) => void
 }
 
 export type ColumnStore = Store<'columns', ColumnState, ColumnGetters, ColumnActions>

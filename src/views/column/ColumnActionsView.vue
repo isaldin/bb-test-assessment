@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>()
 
 const handleSortCardsBtnClick = () => {
-  const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+  const newSortOrder: Column['sortOrder'] = sortOrder === 'asc' ? 'desc' : 'asc'
   emit('sort:cards', newSortOrder)
 }
 </script>
