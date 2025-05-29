@@ -1,7 +1,15 @@
 import { getRandomUuid } from '@/utils/getRandomUuid.ts'
+import type { Card } from '@/entities/card.ts'
 
-export const getCards = (columnId: string) => [
-  { id: getRandomUuid(), columnId, title: 'Sample Card' },
-  { id: getRandomUuid(), columnId, title: 'Some another Sample Card' },
-  { id: getRandomUuid(), columnId, title: 'Yet another Sample Card' },
-]
+const cardsMap: Record<string, Card[]> = {}
+
+export const getCards = (columnId: string) => {
+  if (!cardsMap[columnId]) {
+    cardsMap[columnId] = [
+      { id: getRandomUuid(), title: 'Sample Card' },
+      { id: getRandomUuid(), title: 'Some another Sample Card' },
+      { id: getRandomUuid(), title: 'Yet another Sample Card' },
+    ].map((card) => ({ ...card, columnId }))
+  }
+  return cardsMap[columnId]
+}
