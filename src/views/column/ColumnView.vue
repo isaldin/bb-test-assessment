@@ -41,6 +41,11 @@
         @clear:cards="handleClearCards"
       />
     </div>
+    <ContextMenu :show="contextMenuShown" :x="x" :y="y" :menuRef="menuRef">
+      <ul>
+        <li @click="() => cardIdRef && handleDeleteAction(cardIdRef)">Delete</li>
+      </ul>
+    </ContextMenu>
   </div>
 </template>
 
@@ -51,10 +56,12 @@ import CardView from '@/views/card/CardView.vue'
 import { useCard } from '@/compositions/card'
 import NewCardButton from '@/components/column/NewCardButton.vue'
 import NewCardView from '@/views/card/NewCardView.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import type { Card } from '@/entities/card.ts'
 import ColumnActionsView from '@/views/column/ColumnActionsView.vue'
 import type { Column } from '@/entities/column.ts'
+import { useContextMenu } from '@/compositions/contextMenu.ts'
+import ContextMenu from '@/components/ContextMenu.vue'
 
 type UpdateCardPayload = Pick<Card, 'title' | 'description'>
 
@@ -79,11 +86,11 @@ const {
   deleteCard,
 } = useCard()
 
+const { contextMenuShown, x, y, menuRef, openContextMenu, cardIdRef } = useContextMenu()
+
 const column = computed(() => getColumnById(columnId))
 
 const newCardShown = computed(() => newCardShownForColumnId.value === columnId)
-
-initializeCards(columnId)
 
 const sortOrder = computed(() => column.value?.sortOrder || 'asc')
 const cards = computed(() => {
@@ -115,8 +122,7 @@ const handleEnableColumn = () => {
 }
 
 const handleCardRightClick = (cardId: string) => (e: MouseEvent) => {
-  e.preventDefault()
-  deleteCard(cardId)
+  openContextMenu(e, cardId)
 }
 
 const handleCreateNewCard = (title: string) => {
@@ -141,6 +147,16 @@ const handleSortCards = (sortOrder: Column['sortOrder']) => {
 const handleClearCards = () => {
   clearCards(columnId)
 }
+
+const handleDeleteAction = (cardId: string) => {
+  if (window.confirm('Are you sure?')) {
+    deleteCard(cardId)
+  }
+}
+
+onMounted(() => {
+  initializeCards(columnId)
+})
 </script>
 
 <style lang="scss" scoped>
