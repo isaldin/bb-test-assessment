@@ -19,8 +19,8 @@
         :title="card.title"
         :description="card.description"
         :edit-mode="currentlyEditingCardId === card.id"
-        @dblclick="(e: MouseEvent) => handleCardDblClick(card.id)(e)"
         @contextmenu.prevent="(e: MouseEvent) => handleCardRightClick(card.id)(e)"
+        @start:editing="() => startEditingCard(card.id)"
         @cancel:editing="startEditingCard(null)"
         @update:card="(input: UpdateCardPayload) => handleUpdateCard(card.id, input)"
       />
@@ -88,7 +88,7 @@ initializeCards(columnId)
 const sortOrder = computed(() => column.value?.sortOrder || 'asc')
 const cards = computed(() => {
   const shuffleKey = column.value?.shuffleKey
-  return getCardsForColumn(columnId, sortOrder.value, shuffleKey)
+  return getCardsForColumn(columnId, sortOrder.value, shuffleKey) || []
 })
 
 const cardCount = computed(() => cards.value.length)
@@ -113,18 +113,6 @@ const handleDisableColumn = () => {
 const handleEnableColumn = () => {
   enableColumn(columnId)
 }
-
-const handleCardDblClick =
-  (cardId: string) =>
-  (e: MouseEvent): void => {
-    e.stopPropagation()
-
-    if (currentlyEditingCardId.value === cardId) {
-      return
-    }
-
-    startEditingCard(cardId)
-  }
 
 const handleCardRightClick = (cardId: string) => (e: MouseEvent) => {
   e.preventDefault()

@@ -1,22 +1,34 @@
 <template>
   <card-view-layout :with-border="editMode">
-    <card-title :model-value="title" :editable="editMode" @update:model-value="handleChangeTitle" />
+    <card-title
+      :model-value="props.title"
+      :editable="editMode"
+      :prevent-blur="preventBlur"
+      @change="handleSaveChanges"
+      @dblclick="$emit('start:editing')"
+      @update:model-value="handleChangeTitle"
+      @cancel:editing="handleCancelChanges"
+    />
 
     <card-description
-      :model-value="description"
+      :model-value="props.description || ''"
       :editable="editMode"
+      :prevent-blur="preventBlur"
+      @change="handleSaveChanges"
+      @dblclick="$emit('start:editing')"
       @update:model-value="handleChangeDescription"
+      @cancel:editing="handleCancelChanges"
     />
 
     <div v-if="editMode" class="card-view__actions">
-      <button-with-icon :disabled="savingDisabled" @click="handleSaveChanges">
+      <button-with-icon ref="save-button" :disabled="savingDisabled" @click="handleSaveChanges">
         Save changes
         <template #icon>
           <icon-flash />
         </template>
       </button-with-icon>
 
-      <button-with-icon @click="handleCancelChanges">
+      <button-with-icon ref="cancel-button" @click="handleCancelChanges">
         Cancel
         <template #icon>
           <icon-minus />
@@ -33,7 +45,7 @@ import IconFlash from '@/components/icons/IconFlash.vue'
 import IconMinus from '@/components/icons/IconMinus.vue'
 import CardDescription from '@/components/card/CardDescription.vue'
 import CardViewLayout from '@/views/card/CardViewLayout.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 
 const props = defineProps<{
   title: string
@@ -43,8 +55,12 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:card', card: { title: string; description?: string }): void
+  (e: 'start:editing'): void
   (e: 'cancel:editing'): void
 }>()
+
+const saveBtnRef = useTemplateRef('save-button')
+const cancelBtnRef = useTemplateRef('cancel-button')
 
 const title = ref(props.title)
 const description = ref(props.description || '')
@@ -69,6 +85,10 @@ const handleCancelChanges = () => {
   title.value = props.title
   description.value = props.description || ''
   emit('cancel:editing')
+}
+
+const preventBlur = (e: FocusEvent) => {
+  return e.relatedTarget === saveBtnRef.value?.$el || e.relatedTarget === cancelBtnRef.value?.$el
 }
 </script>
 

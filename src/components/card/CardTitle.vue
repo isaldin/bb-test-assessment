@@ -1,6 +1,6 @@
 <template>
   <div class="card-title">
-    <editable-text :editable="editable" @save="emit('update:modelValue', $event)">
+    <editable-text :editable="editable" @save="emit('change', $event)">
       <template #default="slotProps">
         <div class="card-title__display" @click="slotProps.switchToEdit">
           {{ modelValue }}
@@ -12,8 +12,9 @@
           ref="divContentRef"
           contenteditable
           class="card-title__edit"
+          @input="handleInput"
           @keydown="handleCommit($event, slotProps.commit, slotProps.cancel)"
-          @blur="slotProps.cancel"
+          @blur="handleBlur($event, slotProps.cancel)"
         >
           {{ modelValue }}
         </div>
@@ -27,13 +28,16 @@ import EditableText from '@/components/EditableText.vue'
 import { ref, watch } from 'vue'
 import { setCursorToTheEnd } from '@/utils/setCursorToTheEnd.ts'
 
-defineProps<{
+const { preventBlur } = defineProps<{
   modelValue: string
   editable?: boolean
+  preventBlur: (e: FocusEvent) => boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'cancel:editing'): void
+  (e: 'change', value: string): void
 }>()
 
 const divContentRef = ref<HTMLDivElement>()
@@ -56,6 +60,23 @@ const handleCommit = (
   if (textContent) {
     commitFn(textContent)
   }
+}
+
+const handleInput = () => {
+  const textContent = divContentRef.value?.textContent
+  if (textContent) {
+    emit('update:modelValue', textContent)
+  }
+}
+
+const handleBlur = (e: FocusEvent, cancelFn: () => void) => {
+  if (preventBlur(e)) {
+    e.stopPropagation()
+    return
+  }
+
+  emit('cancel:editing')
+  cancelFn()
 }
 
 watch(divContentRef, (el) => {
